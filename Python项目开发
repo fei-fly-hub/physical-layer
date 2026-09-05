@@ -1,0 +1,45 @@
+
+# 完整步骤：让 Jupyter Notebook 使用当前这个 `.venv` 虚拟环境内核
+
+## 1️⃣ 先回到项目根目录，激活虚拟环境
+```bash
+cd /mnt/workspace/5G/python_5gtoolbox-1.0.0
+source .venv/bin/activate
+2️⃣ 在虚拟环境里安装 ipykernel
+项目缺少 [project] 配置段，改用 uv pip 安装
+uv pip install ipykernel
+3️⃣ 把当前虚拟环境注册成一个 Jupyter 内核（起一个名字）
+python -m ipykernel install --user --name=python_5gtoolbox --display-name="Python (python_5gtoolbox)"
+- --name：内核唯一标识（内部名字）
+- --display‑name：VSCode / Jupyter 下拉框显示的名字
+4️⃣ 验证内核注册成功
+查看本机全部 jupyter 内核列表
+jupyter kernelspec list
+你会看到输出包含这一行：
+python_5gtoolbox  /root/.local/share/jupyter/kernels/python_5gtoolbox
+📘 VSCode ipynb 选择内核操作
+1. 打开你的 .ipynb 文件
+2. 页面右上角点击当前内核名称 → Select Another Kernel
+3. 选择 Python (python_5gtoolbox)
+4. 运行单元格测试导入：
+import sys
+print(sys.executable)
+输出路径应该指向：
+/mnt/workspace/5G/python_5gtoolbox‑1.0.0/.venv/bin/python
+✅ 代表内核绑定成功
+⚠️ 常见问题处理
+1. VSCode 下拉列表看不到新内核
+重启 VSCode，或者刷新 Jupyter 内核列表：Ctrl+Shift+P → Jupyter: Refresh Kernel List
+2. 注册错环境 / 需要删除旧内核
+jupyter kernelspec remove python_5gtoolbox
+3. 确认包是否可以正常导入
+import nr5g
+import pytest
+import plotly
+一键复制完整执行脚本
+cd /mnt/workspace/5G/python_5gtoolbox-1.0.0
+source .venv/bin/activate
+uv pip install ipykernel
+python -m ipykernel install --user --name=python_5gtoolbox --display-name="Python (python_5gtoolbox)"
+jupyter kernelspec list
+执行完之后回到 ipynb 切换内核即可，切换成功后就可以直接调用 pdsch 库绘图分析波形。
