@@ -55,3 +55,47 @@ export PATH="/mnt/workspace/.uv-bin:$PATH"
 source /mnt/workspace/.venv/bin/activate
 ```
 4. 每次新实例运行一次初始化脚本即可恢复完整环境
+
+## 让 Jupyter Notebook 使用当前这个 `.venv` 虚拟环境内核
+
+### 1️⃣ 先回到项目根目录，激活虚拟环境
+```bash
+cd /mnt/workspace/5G/python_5gtoolbox-1.0.0
+source .venv/bin/activate
+```
+
+### 2️⃣ 在虚拟环境里安装 ipykernel
+> 项目缺少 `[project]` 配置段，改用 uv pip 安装
+```bash
+uv pip install ipykernel
+```
+
+### 3️⃣ 把当前虚拟环境注册成一个 Jupyter 内核（起一个名字）
+```bash
+python -m ipykernel install --user --name=python_5gtoolbox --display-name="Python (python_5gtoolbox)"
+```
+- `--name`：内核唯一标识（内部名字）
+- `--display‑name`：VSCode / Jupyter 下拉框显示的名字
+
+### 4️⃣ 验证内核注册成功
+查看本机全部 jupyter 内核列表
+```bash
+jupyter kernelspec list
+```
+你会看到输出包含这一行：
+```
+python_5gtoolbox  /root/.local/share/jupyter/kernels/python_5gtoolbox
+```
+
+### 📘 VSCode ipynb 选择内核操作
+1. 打开你的 `.ipynb` 文件
+2. 页面右上角点击当前内核名称 → **Select Another Kernel**
+3. 选择 `Python (python_5gtoolbox)`
+4. 运行单元格测试导入：
+```python
+import sys
+print(sys.executable)
+```
+输出路径应该指向：
+`/mnt/workspace/5G/python_5gtoolbox‑1.0.0/.venv/bin/python`
+✅ 代表内核绑定成功
